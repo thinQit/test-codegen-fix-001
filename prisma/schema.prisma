@@ -1,46 +1,12 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id           String        @id @default(uuid())
-  name         String
-  email        String        @unique
-  passwordHash String
-  tasks        Task[]
-  sessions     AuthSession[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-}
-
 model Task {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  status      String   @default("todo")
-  dueDate     DateTime?
-  priority    String   @default("medium")
-  tags        Json?
-  ownerId     String
-  owner       User     @relation(fields: [ownerId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([ownerId])
-  @@index([status])
-  @@index([dueDate])
-}
-
-model AuthSession {
-  id        String   @id @default(uuid())
-  token     String   @unique
-  expiresAt DateTime
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  createdAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  title     String
+  completed Boolean  @default(false)
+  priority  String   @default("medium")
+  tags      String   // Changed from Json to String
 }
